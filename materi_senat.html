@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Senat - HIMATEKK ITS 2025/2026</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & React DOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#1e3a8a',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e1b4b',
+                            gold: '#d97706',
+                            accent: '#0284c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card-active {
+            background: rgba(30, 58, 138, 0.45);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-blue-600 selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const DEFINISI_LENGKAP_SENAT = {
+            apaItuSenat: "Senat HIMATEKK ITS adalah lembaga tinggi kemahasiswaan di tingkat Departemen Teknik Kimia FTIRS ITS yang memegang kekuasaan legislatif, aspiratif, pengawasan (controlling), dan yudikatif internal. Senat berdiri secara independen sebagai wujud keterwakilan mahasiswa (representatif) guna menjamin terjadinya iklim 'check and balances' (saling mengawasi dan mengimbangi) terhadap Direksi HIMATEKK ITS selaku lembaga eksekutif.",
+            kedudukanKeanggotaan: {
+                kedudukan: "Berada di bawah naungan Musyawarah Besar (MUBES) HIMATEKK ITS dan selaras dengan Konstitusi Dasar KM ITS (KDKM MUBES V ITS). Berkoordinasi sejajar dengan BLM FTIRS di tingkat Fakultas dan BLM ITS di tingkat Institut.",
+                keanggotaan: "Anggota Senat berjumlah sekurang-kurangnya 5 (lima) orang per perwakilan angkatan mahasiswa aktif Teknik Kimia ITS. Dipilih melalui mekanisme internal angkatan masing-masing, disahkan dalam Musyawarah Tingkat Tinggi (MTT), dan DILARANG MERANGKAP JABATAN di struktur Direksi HIMATEKK ITS.",
+                prinsipKerja: "Mewakili suara angkatan, independen, obyektif, transparan, dan berasaskan kekeluargaan yang profesional."
+            },
+            empatFungsiUtama: [
+                {
+                    nama: "Fungsi Aspiratif & Representatif",
+                    icon: "fa-bullhorn",
+                    color: "text-amber-400",
+                    bg: "bg-amber-500/10",
+                    border: "border-amber-500/30",
+                    deskripsi: "Menjadi wadah utama menjaring, menyerap, mengolah, dan menyalurkan seluruh masukan, keluhan, saran, serta kebutuhan mahasiswa Teknik Kimia ITS kepada pihak eksekutif maupun birokrasi departemen."
+                },
+                {
+                    nama: "Fungsi Legislatif",
+                    icon: "fa-scale-balanced",
+                    color: "text-blue-400",
+                    bg: "bg-blue-500/10",
+                    border: "border-blue-500/30",
+                    deskripsi: "Merancang, mengevaluasi, merumuskan, dan mengesahkan produk hukum HMD seperti Rancangan Garis Besar Haluan Kerja (RGBHK) serta Undang-Undang (UU) HIMATEKK ITS."
+                },
+                {
+                    nama: "Fungsi Pengawasan (Controlling)",
+                    icon: "fa-eye",
+                    color: "text-emerald-400",
+                    bg: "bg-emerald-500/10",
+                    border: "border-emerald-500/30",
+                    deskripsi: "Mengawasi secara berkala ketercapaian dan pelaksanaan program kerja Direksi HIMATEKK ITS agar sesuai dengan GBHK, GBPK, PUPP P3OK, serta berwenang mengeluarkan Surat Peringatan (Memorandum)."
+                },
+                {
+                    nama: "Fungsi Yudikatif & Permusyawaratan",
+                    icon: "fa-gavel",
+                    color: "text-purple-400",
+                    bg: "bg-purple-500/10",
+                    border: "border-purple-500/30",
+                    deskripsi: "Penyelenggara utama forum persidangan tertinggi di tingkat jurusan seperti Musyawarah Tingkat Tinggi (MTT) & MTT-LB, serta menyelesaikan permasalahan interpretasi aturan internal HMD."
+                }
+            ],
+            tugasWewenangResmi: [
+                "Menyelenggarakan Musyawarah Tingkat Tinggi (MTT) dan MTT Luar Biasa (MTT-LB) HIMATEKK ITS.",
+                "Mengawasi jalannya roda organisasi kemahasiswaan dan pelaksanaan GBHK/GBPK oleh Direksi HIMATEKK ITS.",
+                "Meminta penjelasan dan mengevaluasi Laporan Pertanggungjawaban (LPJ) Ketua HIMATEKK ITS di pertengahan dan akhir periode.",
+                "Membuat draf Rancangan Garis Besar Haluan Kerja (RGBHK) dan Undang-Undang (UU) HMD.",
+                "Membentuk Komisi Pemilihan Umum (KPU) dan mengawasi pelaksanaan Pemilihan Umum Ketua HIMATEKK ITS.",
+                "Menjatuhkan Surat Peringatan (Memorandum 1 & Memorandum 2) apabila Ketua HIMATEKK ITS melanggar aturan konstitusi HMD."
+            ],
+            matriksPerbandingan: [
+                { aspek: "Fungsi Utama", senat: "Legislatif, Pengawas, Aspiratif & Yudikatif", direksi: "Eksekutif & Pelaksana Kegiatan HMD" },
+                { aspek: "Kepemimpinan", senat: "Formatur / Ketua Senat", direksi: "Ketua HIMATEKK ITS (Presiden Himpunan)" },
+                { aspek: "Sifat Kerja", senat: "Regulatif, Kontrol, & Penyelaras Kebijakan", direksi: "Operasional, Eksekusi Program, & Pelayanan" },
+                { aspek: "Pertanggungjawaban", senat: "Kepada Massa Angkatan & Forum MTT", direksi: "Kepada Anggota HIMATEKK ITS via Sidang MTT" }
+            ]
+        };
+
+        const ANALISIS_DINAMIKA_2026 = {
+            title: "Dinamika & Tantangan Legislatif di Era Pragmatisme Mahasiswa (2025/2026)",
+            subtitle: "Analisis Pergeseran Minat Berorganisasi Gen Z & Transformasi Reposisi Senat HIMATEKK ITS",
+            pembuka: "Perkembangan organisasi kemahasiswaan di tingkat perguruan tinggi Indonesia, khususnya di Institut Teknologi Sepuluh Nopember (ITS) pada dekade 2025/2026, mengalami pergeseran paradigma (paradigm shift) yang sangat signifikan dalam pola partisipasi mahasiswa.",
+            pointPenyebab: [
+                {
+                    kategori: "Pragmatisme Portofolio & Karier",
+                    icon: "fa-briefcase",
+                    color: "text-amber-400",
+                    border: "border-amber-500/30",
+                    desc: "Generasi Z yang kini mendominasi bangku perkuliahan memiliki kecenderungan rasional-pragmatis yang berfokus pada hasil terukur (measurable outcomes) untuk kesiapan dunia kerja (career readiness). Mahasiswa lebih mengalokasikan waktu pada organisasi keilmiahan, riset, bootcamp, MBKM, dan kompetisi keprofesian yang berdampak langsung pada LinkedIn, CV, serta portofolio individu."
+                },
+                {
+                    kategori: "Persepsi Kerja Legislatif yang Abstrak",
+                    icon: "fa-scale-balanced",
+                    color: "text-blue-400",
+                    border: "border-blue-500/30",
+                    desc: "Lembaga legislatif dan pengawas (seperti Senat/BLM) sering kali dipersepsikan memiliki proses birokrasi kaku, persidangan panjang, dan kerja pengawasan aturan yang abstrak. Kerja-kerja penyusunan UU dan kontrol ormawa dianggap kurang memberikan daya tawar eksternal secara langsung bagi karier individu mahasiswa."
+                },
+                {
+                    kategori: "Kekatetan Kompetisi Waktu & Akademik",
+                    icon: "fa-stopwatch",
+                    color: "text-emerald-400",
+                    border: "border-emerald-500/30",
+                    desc: "Beban akademik Teknik Kimia FTIRS ITS yang dinamis ditambah peluang program Magang Berdampak & MBKM menciptakan keterbatasan alokasi waktu. Mahasiswa secara selektif memilih organisasi dengan fleksibilitas tinggi dan pengembalian nilai tambah (return on investment) kapasitas diri terkuat."
+                }
+            ],
+            elaborasiPerspektif: "Fenomena penurunan minat pada bidang legislatif ini bukan berarti fungsi legislatif kehilangan esensinya, melainkan menuntut reformasi cara kerja. Riset tren partisipasi pemuda (Talentics & Kemendikbud 2024-2026) mencatat bahwa lebih dari 74% mahasiswa Gen Z memprioritaskan keterlibatan pada wadah yang menawarkan pengembangan keterampilan praktis dan eksposur profesional. Dalam konteks HIMATEKK ITS, dinamika ini melahirkan tantangan regenerasi bagi lembaga legislatif jika masih bertahan pada pendekatan konvensional.",
+            jawabanSenat: {
+                judul: "Respon Strategis Kabinet Resonansi 2025/2026",
+                strategi: [
+                    {
+                        nama: "Inovasi Modern Legislative Branding",
+                        detail: "Mengubah narasi lembaga legislatif dari yang terkesan 'kaku dan menghakimi' menjadi 'fasilitator dan pelindung aspirasi' yang adaptif serta relevan dengan gaya komunikasi mahasiswa modern."
+                    },
+                    {
+                        nama: "Advokasi Berbasis Dampak (Impact-Driven)",
+                        detail: "Fungsi pengawasan dan legislasi tidak lagi berfokus pada formalitas dokumen semata, melainkan mengawal kebijakan eksekutif agar mendukung iklim keilmiahan, prestasi, dan fleksibilitas akademik mahasiswa."
+                    },
+                    {
+                        nama: "Digitalisasi & Efisiensi Forum",
+                        detail: "Menyederhanakan mekanisme serap aspirasi dan rapat rapat melalui media interaktif (seperti proker 'What is Happening' & 'Road to RGBHK') tanpa mengorbankan kedalaman substansi hukum HMD."
+                    }
+                ]
+            }
+        };
+
+        const SEJARAH_TIMELINE = [
+            {
+                tahun: "Sebelum 1990",
+                era: "Dewan Mahasiswa (Dema ITS)",
+                mubes: "Era Awal Pergerakan",
+                icon: "fa-seedling",
+                deskripsi: "Awal lahirnya wadah perwakilan mahasiswa di tingkat institut sebelum penataan sistem representatif modern.",
+                detail: "Menjadi fondasi awal kesadaran kolektif mahasiswa ITS akan pentingnya lembaga perwakilan untuk mengawal kebijakan kampus."
+            },
+            {
+                tahun: "1990 - 1997",
+                era: "Senat Mahasiswa ITS (SM ITS)",
+                mubes: "Inisiasi MUBES I (1994)",
+                icon: "fa-landmark",
+                deskripsi: "Dewan Mahasiswa resmi berganti nama menjadi Senat Mahasiswa ITS (SM ITS) pada tahun 1990.",
+                detail: "Pada tahun 1993, SM ITS merumuskan perlunya konstitusi dasar yang mengikat seluruh mahasiswa ITS, yang bermuara pada dilaksanakannya Musyawarah Besar (MUBES) I ITS tahun 1994."
+            },
+            {
+                tahun: "1998 - 2010",
+                era: "Legislatif Mahasiswa ITS (LM ITS)",
+                mubes: "MUBES II (1998) & MUBES III (2001)",
+                icon: "fa-building-columns",
+                deskripsi: "Pasca MUBES II 1998, nama SM ITS disesuaikan menjadi Legislatif Mahasiswa ITS (LM ITS).",
+                detail: "Pada MUBES III (2001), Konstitusi Dasar KM ITS direvisi dan secara resmi melahirkan entitas 'Keluarga Mahasiswa ITS' (KM ITS) sebagai sistem mandiri & demokratis."
+            },
+            {
+                tahun: "2011 - 2017",
+                era: "Dewan Perwakilan Mahasiswa (DPM ITS & DPM F)",
+                mubes: "MUBES IV (2011)",
+                icon: "fa-users-line",
+                deskripsi: "MUBES IV merubah LM ITS menjadi DPM ITS (merujuk pada konsep Dewan Perwakilan Rakyat / DPR RI).",
+                detail: "Terjadi ekspansi struktur dengan dibentuknya DPM Fakultas (DPM F) untuk mengontrol BEM Fakultas, sementara DPM ITS mengontrol BEM ITS."
+            },
+            {
+                tahun: "2018 - Sekarang",
+                era: "Badan Legislatif Mahasiswa (BLM) & Senat HMD",
+                mubes: "MUBES V (2018)",
+                icon: "fa-scale-balanced",
+                deskripsi: "Disahkannya MUBES V ITS mengubah DPM menjadi Badan Legislatif Mahasiswa (BLM ITS & BLM FTIRS).",
+                detail: "Sistem legislatif diselaraskan hingga ke tingkat Departemen/HMD. Di Teknik Kimia FTIRS ITS, peran legislatif mahasiswa diampu oleh SENAT HIMATEKK ITS yang bekerja selaras dengan BLM FTIRS & BLM ITS."
+            }
+        ];
+
+        const KABINET_INFO = {
+            nama: "Kabinet Resonansi",
+            periode: "2025/2026",
+            ketua: "Ferdinand Nathanael Santoso",
+            angkatan: "K63 Satu Asa",
+            definisiKBBI: "Resonansi memiliki arti dengungan (gema, getaran) suara.",
+            filosofi: "Senat sebagai ruang gema ide dan kritik yang konstruktif. Bukan hanya pengawas, tapi resonator kebijakan yang membuat ide mahasiswa terdengar ke seluruh sistem organisasi.",
+            visi: "Mewujudkan Senat HIMATEKK ITS yang responsif, kolaboratif, dan berdampak sebagai penguat suara mahasiswa menuju harmoni dan kemajuan organisasi.",
+            misi: [
+                {
+                    no: "01",
+                    title: "Resonator Aspirasi",
+                    desc: "Meneguhkan peran Senat sebagai resonator aspirasi mahasiswa, memastikan setiap suara mahasiswa diperkuat melalui kajian, advokasi, dan pengawasan yang konstruktif."
+                },
+                {
+                    no: "02",
+                    title: "Sinergi & Kolaborasi",
+                    desc: "Mengoptimalkan kolaborasi lintas lini HIMATEKK ITS, membangun frekuensi kerja bersama antara legislatif, eksekutif, dan mahasiswa untuk mencapai visi departemen yang sinergis."
+                },
+                {
+                    no: "03",
+                    title: "Transparansi & Akuntabilitas",
+                    desc: "Menjaga transparansi dan akuntabilitas kinerja legislatif, menerapkan sistem pelaporan dan publikasi kegiatan yang terbuka serta terukur untuk seluruh anggota HIMATEKK ITS."
+                },
+                {
+                    no: "04",
+                    title: "Inklusivitas & Partisipasi",
+                    desc: "Mendorong partisipasi aktif mahasiswa dalam ruang legislatif dan aspiratif dengan menciptakan wadah dan forum yang inklusif agar mahasiswa dapat menyampaikan ide dan evaluasi secara terbuka."
+                }
+            ],
+            pengalamanKetua: [
+                "Staff of Equipment at CHERNIVAL 2023",
+                "Staff of Controlling Senat HIMATEKK ITS 2023/2024",
+                "Staff of Legislative Senat HIMATEKK ITS 2024/2025",
+                "Staff Mentor at GERIGI ITS 2025",
+                "Staff of Competition FFDC at PETROLIDA 2025",
+                "Manager of Competition FFDC at PETROLIDA 2026"
+            ]
+        };
+
+        const PROGRAM_KERJA = [
+            {
+                id: "sdp",
+                nama: "Senator Development Program",
+                komisi: "Internal / General",
+                kategori: "Internal",
+                icon: "fa-graduation-cap",
+                deskripsi: "Mengadakan sebuah seminar interaktif dengan mendatangkan narasumber yang paham pada bidang tersebut.",
+                tujuan: "Terselenggara kegiatan yang mampu meningkatkan pemahaman anggota senat HIMATEKK pada bidang legislatif di ITS khususnya di departemen Teknik Kimia FTIRS.",
+                sasaran: "Anggota Senat HIMATEKK ITS"
+            },
+            {
+                id: "sim",
+                nama: "Senator Internal Meeting",
+                komisi: "Internal / General",
+                kategori: "Internal",
+                icon: "fa-users-gear",
+                deskripsi: "Rapat rutin tiap bulan untuk membahas agenda yang akan dilakukan oleh Senat HIMATEKK untuk satu bulan ke depan serta laporan progres yang sudah terlaksana tiap komisi.",
+                tujuan: "Terciptanya agenda rutin senat HIMATEKK ITS yang mampu menjadikan tempat sharing dan kajian kondisi terkini dari HIMATEKK ITS.",
+                sasaran: "Pengurus Senat HIMATEKK ITS"
+            },
+            {
+                id: "mtt",
+                nama: "MTT HIMATEKK ITS",
+                komisi: "Internal / General",
+                kategori: "Internal",
+                icon: "fa-gavel",
+                deskripsi: "Mengadakan Forum warga HIMATEKK ITS secara offline guna membahas agenda yang harus dilaksanakan sesuai PUPP3OK.",
+                tujuan: "Menetapkan keberlangsungan Direksi HIMATEKK ITS, Senat HIMATEKK ITS, Musyawarah Besar, dan lain hal sebagainya bila dirasa perlu.",
+                sasaran: "Seluruh Warga Mahasiswa Teknik Kimia FTIRS ITS"
+            },
+            {
+                id: "rgbhk",
+                nama: "Road to RGBHK",
+                komisi: "Ascom (Aspirasi & Komunikasi)",
+                kategori: "Ascom",
+                icon: "fa-clipboard-list",
+                deskripsi: "Merumuskan RGBHK dengan menjaring aspirasi Anggota HIMATEKK ITS dengan kuesioner dan juga wawancara yang dipublikasikan di Instagram Senat HIMATEKK ITS.",
+                tujuan: "Terciptanya wadah aspirasi bagi mahasiswa Teknik Kimia ITS yang bertujuan untuk merumuskan RGBHK yang sesuai dengan perkembangan generasi mahasiswa Teknik Kimia ITS.",
+                sasaran: "Seluruh Anggota HIMATEKK ITS"
+            },
+            {
+                id: "wih",
+                nama: "What is Happening",
+                komisi: "Ascom (Aspirasi & Komunikasi)",
+                kategori: "Ascom",
+                icon: "fa-bullhorn",
+                deskripsi: "Mengoptimalisasikan fungsi media sosial Instagram Senat HIMATEKK ITS sebagai tools untuk menginformasikan forum yang ada di HIMATEKK ITS serta wadah aspirasi mahasiswa.",
+                tujuan: "Terciptanya media yang menjembatani informasi terkait hal-hal yang terjadi di Tekkim ITS sehingga mahasiswa Teknik Kimia memiliki tingkat awareness yang tinggi.",
+                sasaran: "Mahasiswa Teknik Kimia FTIRS ITS"
+            },
+            {
+                id: "fyd",
+                nama: "For You Director",
+                komisi: "Ascom (Aspirasi & Komunikasi)",
+                kategori: "Ascom",
+                icon: "fa-comments",
+                deskripsi: "Mengadakan Forum antara Senat dengan direksi HIMATEKK untuk menyampaikan saran dan keperluan lain yang sudah diatur dalam peraturan yang berlaku.",
+                tujuan: "Tercipta sebuah wadah untuk diskusi antara direksi HIMATEKK dengan Senat HIMATEKK ITS demi keberjalanan kepengurusan HIMATEKK yang lebih baik.",
+                sasaran: "Direksi & Pengurus HIMATEKK ITS"
+            },
+            {
+                id: "pcym",
+                nama: "President Check Your Mail",
+                komisi: "Controlling (Pengawasan)",
+                kategori: "Controlling",
+                icon: "fa-envelope-open-text",
+                deskripsi: "Menganalisis keberjalanan kepengurusan HIMATEKK dan memberikan surat peringatan atau memorandum dengan ketentuan sesuai dengan undang-undang yang berlaku.",
+                tujuan: "Menjalankan mekanisme kontrol terhadap direksi HIMATEKK ITS apabila melanggar PUPP P3OK dan aturan-aturan turunannya.",
+                sasaran: "Presiden / Direksi HIMATEKK ITS"
+            },
+            {
+                id: "ee",
+                nama: "Eagle Eye",
+                komisi: "Controlling (Pengawasan)",
+                kategori: "Controlling",
+                icon: "fa-eye",
+                deskripsi: "Senat menghadiri setiap program kerja HIMATEKK ITS secara bergantian sesuai dengan jadwal piket yang telah dibuat untuk menilai dan mengawasi kegiatan agar sesuai GBHK dan GBPK.",
+                tujuan: "Terbentuknya draft kontrol tiap program kerja HIMATEKK ITS.",
+                sasaran: "Pelaksanaan Proker Eksekutif / Direksi"
+            },
+            {
+                id: "pr",
+                nama: "Progress Report",
+                komisi: "Controlling (Pengawasan)",
+                kategori: "Controlling",
+                icon: "fa-chart-line",
+                deskripsi: "Mengadakan forum terbuka dengan anggota HIMATEKK ITS dan direksi HIMATEKK mengenai keberjalanan kepengurusan HIMATEKK secara hybrid.",
+                tujuan: "Membuat evaluasi mengenai keberlangsungan kepengurusan Direksi HIMATEKK ITS.",
+                sasaran: "Direksi & Warga HIMATEKK ITS"
+            },
+            {
+                id: "dr",
+                nama: "Director Report",
+                komisi: "Controlling (Pengawasan)",
+                kategori: "Controlling",
+                icon: "fa-file-invoice",
+                deskripsi: "Membuat sebuah wadah pelaporan hasil kegiatan dalam bentuk file yang dapat diakses oleh seluruh anggota HIMATEKK ITS pada tengah dan akhir kepengurusan.",
+                tujuan: "Melaksanakan kebijakan press-release bagi direksi HIMATEKK ITS untuk melaporkan hasil kegiatan yang dilaksanakan.",
+                sasaran: "Transparansi Publik Publikasi Internal"
+            },
+            {
+                id: "sl",
+                nama: "Statutory Law",
+                komisi: "Legislatif",
+                kategori: "Legislatif",
+                icon: "fa-scale-balanced",
+                deskripsi: "Merancang Undang-undang yang diperlukan untuk keberlangsungan HIMATEKK serta menganalisis UU yang berlaku dan kajian amandemen sesuai kondisi terkini.",
+                tujuan: "Melaksanakan forum legislatif di tingkat jurusan sesuai dengan arahan KDKM HDPSDM dan PUPP3OK.",
+                sasaran: "Peraturan & Perundang-undangan Departemen"
+            }
+        ];
+
+        const PERATURAN_SENAT = {
+            pupp: {
+                title: "PUPP P3OK HIMATEKK ITS",
+                subtitle: "Pedoman Umum, Pedoman Pelaksanaan, dan Petunjuk Pelaksanaan Organisasi Kemahasiswaan",
+                landasan: [
+                    { jenis: "Idiil", isi: "Pancasila" },
+                    { jenis: "Konstitusional", isi: "KDKM & HDPSDM MUBES V ITS" },
+                    { jenis: "Operasional", isi: "RPJP (Rencana Pengembangan Jangka Panjang 3 Tahun)" }
+                ],
+                hirarkiHmd: [
+                    "1. Ketetapan Musyawarah Besar (MUBES) HIMATEKK ITS",
+                    "2. Ketetapan Musyawarah Tingkat Tinggi (MTT) HIMATEKK ITS",
+                    "3. Undang-Undang (UU) HIMATEKK ITS",
+                    "4. Surat Ketetapan / Keputusan Ketua HIMATEKK ITS"
+                ],
+                kelengkapanOrg: [
+                    { nama: "Direksi HIMATEKK ITS", tipe: "Eksekutif", ket: "Dipimpin Ketua HIMATEKK ITS, menjalankan roda organisasi & GBHK." },
+                    { nama: "Senat HIMATEKK ITS", tipe: "Legislatif & Pengawas", ket: "Melakukan fungsi legislatif, aspiratif, controlling, dan yudikatif internal." },
+                    { nama: "Klub", tipe: "Minat Bakat", ket: "Bawahan langsung Direksi HIMATEKK ITS untuk menaungi hobi & talenta." },
+                    { nama: "Unit", tipe: "Semi-Otonom", ket: "Memiliki AD/ART sendiri, berkoordinasi langsung dengan Ketua HIMATEKK ITS." }
+                ],
+                jenisForum: [
+                    { nama: "Musyawarah Besar (MUBES) HIMATEKK", fungsi: "Forum tertinggi penetapan keberlangsungan HMD, pengkajian PUPP P3OK & PPSDM." },
+                    { nama: "Musyawarah Tingkat Tinggi (MTT) HIMATEKK", fungsi: "Menetapkan Suksesi Raya, LPJ Ketua, GBHK & GBPK Direksi, serta mengesahkan Senat/Ketua." },
+                    { nama: "MTT Luar Biasa (MTT-LB) HIMATEKK", fungsi: "Diadakan jika Memorandum 2 dikeluarkan oleh Senat atau Ketua HIMATEKK berhalangan tetap." }
+                ],
+                memorandum: "Surat Peringatan dari Senat kepada Ketua HIMATEKK ITS apabila melanggar TAP MUBES/MTT. Dikeluarkan sekurang-kurangnya 2 kali sebelum diselenggarakannya MTT-LB."
+            },
+            uuPemilu: {
+                title: "UU HIMATEKK ITS No. 1 Tahun 2021",
+                subtitle: "Perubahan atas UU No. 2A Tahun 2017 tentang Pemilihan Umum Ketua HIMATEKK ITS",
+                azas: "Langsung, Umum, Bebas, Rahasia, Jujur, dan Adil (LUBERJURDIL)",
+                peranSenat: "Senat HIMATEKK ITS adalah pihak yang bertanggung jawab penuh atas keberlangsungan Pemilu, membentuk Komisi Pemilihan Umum (KPU), dan menerima laporan hasil Pemilu.",
+                perangkatPemilu: [
+                    { organ: "KPU (Komisi Pemilihan Umum)", jumlah: "7 - 11 orang", tugas: "Penyelenggara mandiri independen, dibentuk oleh Senat, menyusun aturan & menetapkan pemenang." },
+                    { organ: "PPU (Panitia Pemilihan Umum)", jumlah: "Disesuaikan KPU", tugas: "Fasilitator teknis pendataan, pelaksanaan kampanye, pemungutan & penghitungan suara." },
+                    { organ: "Panwaslu (Panitia Pengawas Pemilu)", jumlah: "1 Perwakilan / Angkatan", tugas: "Pengawas independen, penindak pelanggaran, dan pengusul rekomendasi ke KPU." }
+                ],
+                syaratPeserta: [
+                    "Bertaqwa kepada Tuhan Yang Maha Esa",
+                    "Anggota Penuh HIMATEKK ITS (Memiliki Nomor Pokok Himpunan / NPH)",
+                    "Lulus tahap persiapan & pelatihan manajerial (LKMM TM KM ITS)",
+                    "Memiliki Tim Sukses Kandidat (TSK) yang terdaftar di KPU"
+                ],
+                kuorumSah: "Pemungutan suara dianggap SAH jika jumlah suara masuk minimal 50% + 1 dari total surat suara yang dicetak."
+            },
+            ppsdm: {
+                title: "PPSDM HIMATEKK ITS",
+                subtitle: "Pola Pengembangan Sumber Daya Mahasiswa Teknik Kimia FTIRS ITS (Turunan HDPSDM MUBES V)",
+                asasSdm: ["Keimanan & Ketaqwaan", "Kejuangan 10 Nopember", "IPTEK", "Manfaat", "Demokrasi", "Kesadaran & Tanggung Jawab"],
+                empatBidang: [
+                    { nama: "Keilmiahan", fokus: "Karya Tulis Ilmiah, PKM 5 Bidang, Riset & Teknologi Tepat Guna, Seminar Nasional." },
+                    { nama: "Manajerial", fokus: "Manajemen Diri, Manajemen Kegiatan, Manajemen Organisasi, hingga Pergerakan Massa." },
+                    { nama: "Minat Bakat", fokus: "Penyaluran hobi, pembinaan kompetisi, budaya sportivitas, dan pengukiran prestasi." },
+                    { nama: "Kewirausahaan", fokus: "Ilmu dasar bisnis, penyusunan Business Plan, kompetisi wirausaha, & kemandirian bisnis." }
+                ],
+                tigaTahapan: [
+                    { tahap: "1. Pengenalan", desc: "Pembekalan maba & pengenalan dasar budaya kampus, potensi diri, serta pilihan bidang." },
+                    { tahap: "2. Pemahaman", desc: "Aktualisasi ilmu, partisipasi fungsionaris, perlombaan, & manajemen kegiatan/organisasi." },
+                    { tahap: "3. Pengabdian", desc: "Pematangan personal, pemegang jabatan strategis, transfer ilmu kaderisasi, & pemberdayaan." }
+                ]
+            },
+            gbhk: {
+                title: "GBHK & RGBHK HIMATEKK ITS",
+                subtitle: "Garis Besar Haluan Kerja & Rancangan GBHK Tiap Tahun Kepengurusan",
+                definisiGbhk: "Garis Besar Haluan Kerja (GBHK) adalah pedoman arahan kebijakan organisasi jangka pendek (1 periode kepengurusan) yang menetapkan pokok-pokok sasaran strategis, haluan kerja, dan parameter keberhasilan yang WAJIB dilaksanakan oleh Direksi HIMATEKK ITS selaku lembaga eksekutif.",
+                definisiRgbhk: "Rancangan Garis Besar Haluan Kerja (RGBHK) adalah draf usulan/rancangan kebijakan organisasi yang disusun dan dirumuskan oleh Senat HIMATEKK ITS melalui jaring aspirasi seluruh warga HMD sebelum disahkan dalam persidangan resmi MTT.",
+                alurSiklus: [
+                    { tahap: "1. Jaring Aspirasi", organ: "Komisi Ascom (Proker Road to RGBHK)", ket: "Menjaring masukan, keluhan, dan harapan seluruh massa angkatan melalui kuesioner & wawancara publik." },
+                    { tahap: "2. Penyusunan Draft RGBHK", organ: "Senat HIMATEKK ITS", ket: "Menganalisis data aspirasi dan merumuskan draf indikator kebijakan serta parameter ketercapaian." },
+                    { tahap: "3. Uji Publik via MUSMA", organ: "Musyawarah Mahasiswa (MUSMA)", ket: "Forum pembahasan terbuka draf RGBHK bersama warga HIMATEKK ITS untuk uji publik & masukan." },
+                    { tahap: "4. Finalisasi Draf", organ: "Komisi Legislatif Senat", ket: "Penyelarasan draf akhir RGBHK berdasarkan rekomendasi dan hasil ketetapan forum MUSMA." },
+                    { tahap: "5. Pengesahan MTT", organ: "Musyawarah Tingkat Tinggi (MTT)", ket: "Sidang resmi penetapan RGBHK menjadi GBHK yang mengikat Direksi HIMATEKK ITS selama 1 periode." }
+                ],
+                fungsiKontrol: [
+                    { nama: "Parameter Eagle Eye", desc: "Dasar acuan penilaian bagi Senat saat mengawasi eksekusi program kerja Direksi di lapangan." },
+                    { nama: "Tolok Ukur Progress Report", desc: "Indikator kuantitatif dan kualitatif untuk mengevaluasi LPJ pertengahan & akhir kepengurusan Direksi." },
+                    { nama: "Landasan Penerbitan SP / Memorandum", desc: "Apabila Direksi melanggar/menyimpang dari GBHK, Senat berhak mengeluarkan Memorandum (PCYM)." }
+                ]
+            }
+        };
+
+        const GUIDEBOOK_DATA = {
+            jenisPersidangan: [
+                { nama: "MTT (Musyawarah Tingkat Tinggi)", cakupan: "Tingkat Institut, FTIRS, & HMD", deskripsi: "Forum musyawarah tertinggi untuk menetapkan GBHK, mengevaluasi/mengesahkan LPJ BEM/Direksi, dan mengukuhkan pimpinan terpilih." },
+                { nama: "MTT-LB (Musyawarah Tingkat Tinggi Luar Biasa)", cakupan: "Darurat / Isu Khusus", deskripsi: "Diadakan jika Presiden BEM/Ketua HMD berhalangan tetap atau setelah penerbitan Memorandum 2 oleh legislatif." },
+                { nama: "MUSMA (Musyawarah Mahasiswa)", cakupan: "Wadah Serap Aspirasi", deskripsi: "Forum komunikasi terbuka untuk menjaring aspirasi publik mahasiswa guna masukan kebijakan ormawa & uji publik draf hukum." },
+                { nama: "MUBES (Musyawarah Besar ITS)", cakupan: "Sistem Tertinggi KM ITS", deskripsi: "Forum tertinggi perwakilan ormawa KM ITS untuk merevisi KDKM, HDPSDM, serta konstitusi dasar kampus." }
+            ],
+            aturanKetukPalu: [
+                { ketuk: "1 Kali Ketukan", arti: "Menghentikan sidang sementara (skorsing singkat), mencabut skorsing 1x ketuk, atau menandai penyerahan/penerimaan pimpinan sidang." },
+                { ketuk: "2 Kali Ketukan", arti: "Menghentikan sidang dalam waktu yang cukup lama (pending jam/hari) atau mencabut pending tersebut." },
+                { ketuk: "3 Kali Ketukan", arti: "Membuka & menutup persidangan secara resmi, serta mengesahkan putusan akhir (Keputusan, Ketetapan/TAP, Rekomendasi)." }
+            ],
+            jenisPutusan: [
+                { tipe: "Keputusan", sifat: "Mengikat Ke Dalam", ket: "Aturan internal persidangan agar forum berjalan tertib, efektif, dan efisien (contoh: Keputusan Tata Tertib Sidang)." },
+                { tipe: "Ketetapan (TAP)", sifat: "Mengikat Ke Dalam & Luar", ket: "Putusan bersifat mengatur, mengarahkan, dan mengikat seluruh ormawa (contoh: TAP GBHK & TAP Anggota Senat)." },
+                { tipe: "Rekomendasi (REK)", sifat: "Tidak Mengikat", ket: "Himbauan atau saran strategis dari forum yang ditujukan kepada pihak tertentu untuk ditindaklanjuti." }
+            ]
+        };
+
+        const QUIZ_QUESTIONS = [
+            {
+                id: 1,
+                question: "Apa definisi utama Senat HIMATEKK ITS dalam sistem organisasi di Departemen Teknik Kimia FTIRS ITS?",
+                options: [
+                    "Lembaga pelaksana seluruh kegiatan event sosial dan olahraga mahasiswa",
+                    "Lembaga tinggi mahasiswa yang memegang fungsi legislatif, aspiratif, pengawasan (controlling), dan yudikatif internal",
+                    "Kepanitiaan khusus yang dibentuk hanya saat terjadi pergantian ketua himpunan",
+                    "Badan semi-otonom yang mengurus pendanaan dan kewirausahaan departemen"
+                ],
+                answer: 1,
+                explanation: "Senat HIMATEKK ITS adalah lembaga tinggi legislatif & pengawas independen yang mengawal kebijakan serta menjadi penyeimbang (check and balances) bagi Direksi HIMATEKK ITS."
+            },
+            {
+                id: 2,
+                question: "Manakah di bawah ini yang BUKAN merupakan salah satu dari 4 Fungsi Utama Senat HIMATEKK ITS?",
+                options: [
+                    "Fungsi Eksekutif Pelaksanaan Event Lapangan",
+                    "Fungsi Aspiratif & Representatif",
+                    "Fungsi Legislatif",
+                    "Fungsi Pengawasan (Controlling)"
+                ],
+                answer: 0,
+                explanation: "Fungsi Eksekutif pelaksanaan kegiatan diampu oleh Direksi HIMATEKK ITS, bukan Senat HIMATEKK ITS."
+            },
+            {
+                id: 3,
+                question: "Apa arti nama 'Kabinet Resonansi' menurut makna yang diusung oleh Senat HIMATEKK ITS 2025/2026?",
+                options: [
+                    "Ruang pengawasan yang menindak tegas setiap pelanggaran",
+                    "Ruang gema ide dan kritik konstruktif yang memperkuat suara mahasiswa ke sistem organisasi",
+                    "Wadah perlombaan akademik dan riset bagi mahasiswa Teknik Kimia",
+                    "Lembaga pengesahan anggaran belanja eksekutif departemen"
+                ],
+                answer: 1,
+                explanation: "Resonansi diartikan sebagai gema atau getaran. Senat hadir sebagai resonator kebijakan yang menyuarakan dan memperkuat aspirasi mahasiswa."
+            },
+            {
+                id: 4,
+                question: "Faktor utama yang menyebabkan pergeseran minat partisipasi mahasiswa pada organisasi legislatif di era 2025/2026 adalah...",
+                options: [
+                    "Kurangnya dukungan pendanaan dari pihak institut",
+                    "Pragmatisme Gen Z yang lebih memilih organisasi keilmiahan/profesionalitas berdampak langsung pada CV/portofolio karier",
+                    "Penghapusan seluruh fungsi pengawasan di tingkat jurusan",
+                    "Aturan pembatasan jam perkuliahan di Teknik Kimia"
+                ],
+                answer: 1,
+                explanation: "Mahasiswa saat ini lebih berfokus pada hasil terukur (measurable career readiness) yang langsung membentuk portofolio individu seperti kompetisi keilmiahan dan riset."
+            },
+            {
+                id: 5,
+                question: "Berdasarkan PUPP P3OK HIMATEKK ITS, urutan tertinggi dalam Tata Urutan Perundangan di HIMATEKK ITS adalah...",
+                options: [
+                    "Surat Ketetapan Ketua HIMATEKK ITS",
+                    "Undang-Undang (UU) HIMATEKK ITS",
+                    "Ketetapan Musyawarah Tingkat Tinggi (MTT) HIMATEKK ITS",
+                    "Ketetapan Musyawarah Besar (MUBES) HIMATEKK ITS"
+                ],
+                answer: 3,
+                explanation: "Hierarki aturan tertinggi di tingkat HMD adalah Ketetapan MUBES HIMATEKK ITS, diikuti TAP MTT, UU HIMATEKK, dan SK Ketua HIMATEKK."
+            }
+        ];
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('overview');
+            const [filterKategori, setFilterKategori] = useState('All');
+            const [presenterMode, setPresenterMode] = useState(false);
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const [subTabPeraturan, setSubTabPeraturan] = useState('pupp');
+
+            // Quiz State
+            const [quizAnswers, setQuizAnswers] = useState({});
+            const [quizSubmitted, setQuizSubmitted] = useState(false);
+            const [quizScore, setQuizScore] = useState(0);
+
+            const slides = [
+                {
+                    title: "Pitch Deck & Pembelajaran Senat HIMATEKK",
+                    subtitle: "Kabinet Resonansi 2025/2026",
+                    badge: "Pengenalan Utama",
+                    content: (
+                        <div className="text-center py-6">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-tr from-blue-600 to-amber-500 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/20">
+                                <i className="fa-solid fa-building-columns text-white"></i>
+                            </div>
+                            <h2 className="text-3xl font-extrabold text-white mb-2">SENAT HIMATEKK ITS</h2>
+                            <p className="text-xl text-amber-400 font-semibold mb-4">Kabinet Resonansi 2025/2026</p>
+                            <p className="text-slate-300 max-w-xl mx-auto leading-relaxed text-xs">
+                                Lembaga Tinggi Legislatif & Pengawas Mahasiswa Departemen Teknik Kimia FTIRS ITS yang responsif, kolaboratif, dan berdampak.
+                            </p>
+                            <div className="mt-6 flex justify-center gap-3 text-xs text-slate-400">
+                                <span className="bg-slate-900 px-4 py-2 rounded-full border border-slate-800"><i className="fa-brands fa-instagram text-amber-400 mr-2"></i>@senathimatekk.its</span>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Pengenalan Mendasar: Apa Itu Senat HIMATEKK ITS?",
+                    subtitle: "Definisi, Kedudukan, & 4 Pilar Fungsi Utama",
+                    badge: "Modul Dasar",
+                    content: (
+                        <div className="space-y-4 py-2 text-xs">
+                            <p className="text-slate-200 leading-relaxed bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                                {DEFINISI_LENGKAP_SENAT.apaItuSenat}
+                            </p>
+                            <div className="grid grid-cols-2 gap-3">
+                                {DEFINISI_LENGKAP_SENAT.empatFungsiUtama.map((f, i) => (
+                                    <div key={i} className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
+                                        <div className="flex items-center gap-2">
+                                            <i className={`fa-solid ${f.icon} ${f.color}`}></i>
+                                            <h4 className="font-bold text-white text-[11px]">{f.nama}</h4>
+                                        </div>
+                                        <p className="text-slate-300 text-[10px] leading-snug">{f.deskripsi}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Analisis Dinamika & Pergeseran Minat Gen Z (2026)",
+                    subtitle: "Tantangan Pragmatisme Karier & Reposisi Strategis Senat",
+                    badge: "Kajian Strategis",
+                    content: (
+                        <div className="space-y-4 py-2 text-xs">
+                            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 leading-relaxed">
+                                <strong>Realita Tren 2026:</strong> Mahasiswa cenderung mengalokasikan waktu pada bidang keilmiahan, riset, dan portofolio profesionalitas yang berdampak langsung pada karier individu daripada keikutsertaan pada struktur regulasi legislatif.
+                            </div>
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
+                                    <span className="text-amber-400 font-bold block text-[11px]"><i className="fa-solid fa-briefcase mr-1"></i> Career Readiness</span>
+                                    <p className="text-slate-300 text-[10px]">Fokus pada portofolio individual, CV, LinkedIn & MBKM.</p>
+                                </div>
+                                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
+                                    <span className="text-blue-400 font-bold block text-[11px]"><i className="fa-solid fa-feather mr-1"></i> Kerja Regulasi</span>
+                                    <p className="text-slate-300 text-[10px]">Persepsi birokrasi legislatif yang terkesan kaku & abstrak.</p>
+                                </div>
+                                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
+                                    <span className="text-emerald-400 font-bold block text-[11px]"><i className="fa-solid fa-bullhorn mr-1"></i> Solusi Resonansi</span>
+                                    <p className="text-slate-300 text-[10px]">Reposisi Senat sebagai fasilitator inklusif & modern.</p>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Sejarah & Evolusi Senat di ITS",
+                    subtitle: "Dari Dema ITS (1990) hingga BLM & Senat HMD",
+                    badge: "Sejarah & Konteks",
+                    content: (
+                        <div className="space-y-4 py-2">
+                            <p className="text-xs text-slate-300 leading-relaxed">
+                                Lembaga legislatif mahasiswa di ITS mengalami metamorfosis dari masa ke masa sesuai dinamika MUBES ITS:
+                            </p>
+                            <div className="grid grid-cols-5 gap-2 text-center text-xs">
+                                <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                    <span className="text-amber-400 font-bold block text-[10px]">Sebelum 1990</span>
+                                    <p className="font-bold text-white text-xs mt-1">Dema ITS</p>
+                                </div>
+                                <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                    <span className="text-amber-400 font-bold block text-[10px]">1990 - 1997</span>
+                                    <p className="font-bold text-white text-xs mt-1">SM ITS</p>
+                                </div>
+                                <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                    <span className="text-amber-400 font-bold block text-[10px]">1998 - 2010</span>
+                                    <p className="font-bold text-white text-xs mt-1">LM ITS</p>
+                                </div>
+                                <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                    <span className="text-amber-400 font-bold block text-[10px]">2011 - 2017</span>
+                                    <p className="font-bold text-white text-xs mt-1">DPM ITS/F</p>
+                                </div>
+                                <div className="bg-blue-950 p-2.5 rounded-xl border border-blue-500/50">
+                                    <span className="text-amber-400 font-bold block text-[10px]">2018 - Now</span>
+                                    <p className="font-bold text-white text-xs mt-1">BLM & Senat</p>
+                                </div>
+                            </div>
+                            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300">
+                                <span className="font-bold text-amber-400 block mb-1"><i className="fa-solid fa-circle-info mr-1"></i> Posisi Saat Ini:</span>
+                                Senat HIMATEKK ITS beroperasi sebagai lembaga legislatif & pengawas eksekutif di tingkat Departemen Teknik Kimia FTIRS, berada dalam kesatuan sistem KM ITS berdasarkan MUBES V ITS.
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Profil Formatur / Ketua Senat",
+                    subtitle: "Kepemimpinan & Latar Belakang",
+                    badge: "Who Is This?",
+                    content: (
+                        <div className="grid md:grid-cols-12 gap-8 items-center py-4">
+                            <div className="md:col-span-5 text-center">
+                                <div className="w-44 h-44 mx-auto rounded-2xl bg-slate-800 border-2 border-amber-500/50 flex flex-col items-center justify-center p-4 shadow-xl">
+                                    <div className="w-20 h-20 rounded-full bg-blue-900/80 flex items-center justify-center mb-2 text-3xl text-amber-400">
+                                        <i className="fa-solid fa-user-tie"></i>
+                                    </div>
+                                    <h3 className="font-bold text-base text-white">{KABINET_INFO.ketua}</h3>
+                                    <span className="text-xs bg-amber-500/20 text-amber-300 px-3 py-0.5 rounded-full mt-1">{KABINET_INFO.angkatan}</span>
+                                </div>
+                            </div>
+                            <div className="md:col-span-7 space-y-2">
+                                <h4 className="text-sm font-semibold text-blue-400 border-b border-slate-800 pb-2">
+                                    <i className="fa-solid fa-briefcase mr-2"></i>Pengalaman Organisasi & Kepemimpinan
+                                </h4>
+                                <ul className="space-y-1.5 text-xs text-slate-300">
+                                    {KABINET_INFO.pengalamanKetua.map((exp, idx) => (
+                                        <li key={idx} className="flex items-center gap-3 bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                                            <i className="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
+                                            <span>{exp}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Filosofi 'Resonansi'",
+                    subtitle: "Arti & Makna Nama Kabinet",
+                    badge: "Filosofi Nama",
+                    content: (
+                        <div className="space-y-4 py-2">
+                            <div className="bg-amber-500/10 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Menurut KBBI</span>
+                                <p className="text-base text-amber-200 font-serif italic mt-1">"{KABINET_INFO.definisiKBBI}"</p>
+                            </div>
+                            <div className="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-2">
+                                <h4 className="text-base font-bold text-white flex items-center gap-2">
+                                    <i className="fa-solid fa-wave-square text-blue-400"></i> Manifestasi Peran Senat
+                                </h4>
+                                <p className="text-slate-300 leading-relaxed text-xs">
+                                    {KABINET_INFO.filosofi}
+                                </p>
+                            </div>
+                        </div>
+                    )
+                },
+                {
+                    title: "Landasan Peraturan HIMATEKK ITS",
+                    subtitle: "PUPP P3OK, UU Pemilu 2021, PPSDM & GBHK",
+                    badge: "Payung Hukum HMD",
+                    content: (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 py-2 text-xs">
+                            <div className="bg-slate-900 p-3 rounded-xl border border-amber-500/30 space-y-1.5">
+                                <i className="fa-solid fa-book-bookmark text-lg text-amber-400"></i>
+                                <h4 className="font-bold text-white text-[11px]">PUPP P3OK</h4>
+                                <p className="text-slate-300 text-[10px]">Konstitusi dasar HMD yang mengatur Senat, Direksi, Unit, Klub, dan MUBES/MTT.</p>
+                            </div>
+                            <div className="bg-slate-900 p-3 rounded-xl border border-blue-500/30 space-y-1.5">
+                                <i className="fa-solid fa-check-to-slot text-lg text-blue-400"></i>
+                                <h4 className="font-bold text-white text-[11px]">UU Pemilu 2021</h4>
+                                <p className="text-slate-300 text-[10px]">Landasan Pemilu Ketua HIMATEKK ITS. Senat membentuk KPU & penanggung jawab Pemilu.</p>
+                            </div>
+                            <div className="bg-slate-900 p-3 rounded-xl border border-emerald-500/30 space-y-1.5">
+                                <i className="fa-solid fa-chart-line text-lg text-emerald-400"></i>
+                                <h4 className="font-bold text-white text-[11px]">PPSDM HIMATEKK</h4>
+                                <p className="text-slate-300 text-[10px]">Pola pengembangan SDM 3 tahap (Pengenalan - Pemahaman - Pengabdian) di 4 bidang.</p>
+                            </div>
+                            <div className="bg-slate-900 p-3 rounded-xl border border-purple-500/30 space-y-1.5">
+                                <i className="fa-solid fa-clipboard-check text-lg text-purple-400"></i>
+                                <h4 className="font-bold text-white text-[11px]">GBHK & RGBHK</h4>
+                                <p className="text-slate-300 text-[10px]">Garis Besar Haluan Kerja tahunan hasil jaring aspirasi (RGBHK) yang disahkan di MTT.</p>
+                            </div>
+                        </div>
+                    )
+                }
+            ];
+
+            const handleQuizSelect = (qId, optionIdx) => {
+                if (quizSubmitted) return;
+                setQuizAnswers({ ...quizAnswers, [qId]: optionIdx });
+            };
+
+            const handleQuizSubmit = () => {
+                let score = 0;
+                QUIZ_QUESTIONS.forEach(q => {
+                    if (quizAnswers[q.id] === q.answer) {
+                        score += 20;
+                    }
+                });
+                setQuizScore(score);
+                setQuizSubmitted(true);
+            };
+
+            const handleQuizReset = () => {
+                setQuizAnswers({});
+                setQuizSubmitted(false);
+                setQuizScore(0);
+            };
+
+            const filteredProker = filterKategori === 'All' 
+                ? PROGRAM_KERJA 
+                : PROGRAM_KERJA.filter(p => p.kategori === filterKategori);
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Header Top Navigation */}
+                    <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-amber-500 flex items-center justify-center font-bold text-white shadow-md">
+                                <i className="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-white text-base leading-none">SENAT HIMATEKK ITS</h1>
+                                <span className="text-xs text-amber-400 font-medium">Kabinet Resonansi 2025/2026</span>
+                            </div>
+                        </div>
+
+                        {/* Top Action Controls */}
+                        <div className="flex items-center gap-3">
+                            <button 
+                                onClick={() => setPresenterMode(true)}
+                                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20">
+                                <i className="fa-solid fa-display"></i>
+                                <span className="hidden sm:inline">Mode Presenter (Slide)</span>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Navigation Bar Tabs */}
+                    <nav className="bg-slate-900/50 border-b border-slate-800/80 px-4 lg:px-8 overflow-x-auto custom-scrollbar">
+                        <div className="flex gap-2 py-2 min-w-max">
+                            {[
+                                { id: 'overview', label: 'Pengenalan & Visi Misi', icon: 'fa-compass' },
+                                { id: 'dinamika', label: 'Analisis Dinamika & Tren 2026', icon: 'fa-chart-pie' },
+                                { id: 'sejarah', label: 'Sejarah & Perkembangan ITS', icon: 'fa-timeline' },
+                                { id: 'peraturan', label: 'Peraturan & Produk Hukum HMD', icon: 'fa-gavel' },
+                                { id: 'proker', label: 'Program Kerja (Interactive)', icon: 'fa-list-check' },
+                                { id: 'guidebook', label: 'Edukasi Hukum & Sidang', icon: 'fa-book-bookmark' },
+                                { id: 'ketua', label: 'Profil Ketua Senat', icon: 'fa-user-tie' },
+                                { id: 'quiz', label: 'Kuis Evaluasi', icon: 'fa-circle-question' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+                                        activeTab === tab.id 
+                                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                                    }`}>
+                                    <i className={`fa-solid ${tab.icon}`}></i>
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
+
+                    {/* Main Content Area */}
+                    <main className="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full">
+
+                        {}
+                        {activeTab === 'overview' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                {/* Hero Banner */}
+                                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-800/40 p-8 lg:p-12 shadow-2xl">
+                                    <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div className="absolute right-20 top-0 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                                    <div className="relative z-10 max-w-3xl space-y-4">
+                                        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-3 py-1.5 rounded-full font-semibold">
+                                            <i className="fa-solid fa-sparkles"></i>
+                                            <span>Media Pembelajaran Peraturan & Program Kerja</span>
+                                        </div>
+                                        <h2 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight">
+                                            Senat HIMATEKK ITS <br/>
+                                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
+                                                {KABINET_INFO.nama} {KABINET_INFO.periode}
+                                            </span>
+                                        </h2>
+                                        <p className="text-slate-300 text-sm leading-relaxed">
+                                            Lembaga tinggi kemahasiswaan di Departemen Teknik Kimia FTIRS ITS yang responsif, kolaboratif, dan berdampak sebagai penguat suara mahasiswa menuju harmoni dan kemajuan organisasi.
+                                        </p>
+                                        <div className="pt-2 flex flex-wrap gap-4">
+                                            <button onClick={() => setPresenterMode(true)} className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2">
+                                                <i className="fa-solid fa-play"></i>
+                                                <span>Mulai Presentasi Slide</span>
+                                            </button>
+                                            <button onClick={() => setActiveTab('dinamika')} className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-2">
+                                                <i className="fa-solid fa-chart-line text-amber-400"></i>
+                                                <span>Analisis Dinamika 2026</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* SECTION PENGENALAN DETAIL: APA ITU SENAT & TUGASNYA */}
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-blue-500/30 space-y-6">
+                                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                                        <div>
+                                            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                                                <i className="fa-solid fa-landmark mr-1.5"></i> Pengenalan Utama Lembaga
+                                            </span>
+                                            <h3 className="text-2xl font-extrabold text-white mt-2">Apa Itu Senat HIMATEKK ITS?</h3>
+                                        </div>
+                                        <span className="text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 shrink-0">
+                                            <i className="fa-solid fa-shield-check text-blue-400 mr-1.5"></i> Kedudukan: Independen
+                                        </span>
+                                    </div>
+
+                                    {/* Deskripsi & Kedudukan */}
+                                    <div className="grid lg:grid-cols-12 gap-6 items-stretch">
+                                        <div className="lg:col-span-7 bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                                            <div>
+                                                <h4 className="text-sm font-bold text-amber-400 flex items-center gap-2 mb-2">
+                                                    <i className="fa-solid fa-circle-info"></i> Definisi & Peran Strategis
+                                                </h4>
+                                                <p className="text-xs text-slate-300 leading-relaxed">
+                                                    {DEFINISI_LENGKAP_SENAT.apaItuSenat}
+                                                </p>
+                                            </div>
+                                            <div className="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
+                                                <i className="fa-solid fa-scale-unbalanced-flip text-blue-400"></i>
+                                                <span>Menjamin mekanisme 'Check and Balances' di tingkat Departemen</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="lg:col-span-5 bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-3">
+                                            <h4 className="text-sm font-bold text-blue-400 flex items-center gap-2">
+                                                <i className="fa-solid fa-users"></i> Aturan Keanggotaan
+                                            </h4>
+                                            <p className="text-xs text-slate-300 leading-relaxed">
+                                                {DEFINISI_LENGKAP_SENAT.kedudukanKeanggotaan.keanggotaan}
+                                            </p>
+                                            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300">
+                                                <i className="fa-solid fa-ban mr-1.5"></i>
+                                                <strong>Larangan Rangkap Jabatan:</strong> Anggota Senat dilarang menjabat di eksekutif (Direksi HMD/BEM) untuk menjaga independensi.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* 4 Pilar Fungsi Utama Grid */}
+                                    <div>
+                                        <h4 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                            <i className="fa-solid fa-layer-group text-amber-400"></i>
+                                            <span>4 Pilar Fungsi Utama Senat</span>
+                                        </h4>
+                                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            {DEFINISI_LENGKAP_SENAT.empatFungsiUtama.map((f, idx) => (
+                                                <div key={idx} className={`glass-card p-5 rounded-2xl border ${f.border} space-y-2 flex flex-col justify-between`}>
+                                                    <div className="space-y-2">
+                                                        <div className={`w-10 h-10 rounded-xl ${f.bg} ${f.color} flex items-center justify-center text-lg`}>
+                                                            <i className={`fa-solid ${f.icon}`}></i>
+                                                        </div>
+                                                        <h5 className="font-bold text-white text-sm">{f.nama}</h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">{f.deskripsi}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Perbandingan Senat vs Direksi */}
+                                    <div className="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                                        <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                                            <i className="fa-solid fa-code-compare text-blue-400"></i>
+                                            <span>Matriks Perbedaan: Senat (Legislatif) vs Direksi (Eksekutif)</span>
+                                        </h4>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-left text-xs border-collapse">
+                                                <thead>
+                                                    <tr className="border-b border-slate-800 text-slate-400 uppercase text-[10px]">
+                                                        <th className="py-2 px-3">Aspek Organisasi</th>
+                                                        <th className="py-2 px-3 text-amber-400">Senat HIMATEKK ITS (Legislatif)</th>
+                                                        <th className="py-2 px-3 text-blue-400">Direksi HIMATEKK ITS (Eksekutif)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-800/60">
+                                                    {DEFINISI_LENGKAP_SENAT.matriksPerbandingan.map((m, i) => (
+                                                        <tr key={i} className="hover:bg-slate-800/40">
+                                                            <td className="py-2.5 px-3 font-semibold text-slate-300">{m.aspek}</td>
+                                                            <td className="py-2.5 px-3 text-slate-200">{m.senat}</td>
+                                                            <td className="py-2.5 px-3 text-slate-200">{m.direksi}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Daftar Tugas & Wewenang Mendasar */}
+                                    <div className="space-y-3">
+                                        <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                                            <i className="fa-solid fa-list-check text-emerald-400"></i>
+                                            <span>Daftar Tugas & Wewenang Mendasar (PUPP P3OK Pasal 11)</span>
+                                        </h4>
+                                        <div className="grid md:grid-cols-2 gap-3">
+                                            {DEFINISI_LENGKAP_SENAT.tugasWewenangResmi.map((tugas, idx) => (
+                                                <div key={idx} className="p-3 bg-slate-900 border border-slate-800 rounded-xl flex items-start gap-2.5 text-xs text-slate-300">
+                                                    <i className="fa-solid fa-circle-check text-amber-400 text-xs shrink-0 mt-0.5"></i>
+                                                    <span>{tugas}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Makna Resonansi & Visi Card */}
+                                <div className="grid md:grid-cols-12 gap-6">
+                                    <div className="md:col-span-5 glass-card p-6 rounded-2xl flex flex-col justify-between">
+                                        <div>
+                                            <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-4">
+                                                <i className="fa-solid fa-quote-left"></i>
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Arti & Makna "Resonansi"</h3>
+                                            <p className="text-xs text-amber-400 font-serif italic mb-4">
+                                                /re.so.nan.si/ — {KABINET_INFO.definisiKBBI}
+                                            </p>
+                                            <p className="text-slate-300 text-sm leading-relaxed">
+                                                {KABINET_INFO.filosofi}
+                                            </p>
+                                        </div>
+                                        <div className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3 text-xs text-slate-400">
+                                            <i className="fa-solid fa-bullhorn text-blue-400"></i>
+                                            <span>Menjadi wadah gema ide mahasiswa Teknik Kimia ITS</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Visi Card */}
+                                    <div className="md:col-span-7 glass-card p-6 rounded-2xl flex flex-col justify-between border-l-4 border-l-blue-500">
+                                        <div>
+                                            <span className="text-xs font-bold text-blue-400 tracking-wider uppercase mb-1 block">VISI KABINET RESONANSI</span>
+                                            <h3 className="text-xl lg:text-2xl font-bold text-white leading-snug mb-4">
+                                                "{KABINET_INFO.visi}"
+                                            </h3>
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-800">
+                                            <div className="text-center p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                                                <i className="fa-solid fa-bolt text-amber-400 mb-1"></i>
+                                                <h4 className="text-xs font-bold text-white">Responsif</h4>
+                                                <p className="text-[10px] text-slate-400 mt-0.5">Tanggap Aspirasi</p>
+                                            </div>
+                                            <div className="text-center p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                                                <i className="fa-solid fa-handshake text-blue-400 mb-1"></i>
+                                                <h4 className="text-xs font-bold text-white">Kolaboratif</h4>
+                                                <p className="text-[10px] text-slate-400 mt-0.5">Sinergi Lintas Lini</p>
+                                            </div>
+                                            <div className="text-center p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                                                <i className="fa-solid fa-chart-line text-emerald-400 mb-1"></i>
+                                                <h4 className="text-xs font-bold text-white">Berdampak</h4>
+                                                <p className="text-[10px] text-slate-400 mt-0.5">Hasil Nyata & Terukur</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'dinamika' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800 relative overflow-hidden">
+                                    <div className="max-w-3xl space-y-3">
+                                        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-3 py-1 rounded-full font-bold">
+                                            <i className="fa-solid fa-chart-line"></i>
+                                            <span>Kajian Kebijakan Strategis 2026</span>
+                                        </div>
+                                        <h2 className="text-2xl lg:text-3xl font-extrabold text-white">
+                                            {ANALISIS_DINAMIKA_2026.title}
+                                        </h2>
+                                        <p className="text-slate-300 text-xs lg:text-sm leading-relaxed">
+                                            {ANALISIS_DINAMIKA_2026.pembuka}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid lg:grid-cols-3 gap-6">
+                                    {ANALISIS_DINAMIKA_2026.pointPenyebab.map((item, idx) => (
+                                        <div key={idx} className={`glass-card p-6 rounded-2xl border ${item.border} space-y-3 flex flex-col justify-between`}>
+                                            <div className="space-y-3">
+                                                <div className={`w-10 h-10 rounded-xl bg-slate-900 ${item.color} flex items-center justify-center text-xl`}>
+                                                    <i className={`fa-solid ${item.icon}`}></i>
+                                                </div>
+                                                <h3 className="font-extrabold text-white text-base">{item.kategori}</h3>
+                                                <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
+                                            </div>
+                                            <div className="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center gap-2">
+                                                <i className="fa-solid fa-arrow-trend-down text-rose-400"></i>
+                                                <span>Dampak pada angka registrasi legislatif</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="grid lg:grid-cols-12 gap-8">
+                                    <div className="lg:col-span-7 glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                                        <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                            <i className="fa-solid fa-graduation-cap text-amber-400"></i>
+                                            <span>Kontekstualisasi Tren Gen Z di Indonesia</span>
+                                        </h3>
+                                        <p className="text-xs text-slate-300 leading-relaxed">
+                                            {ANALISIS_DINAMIKA_2026.elaborasiPerspektif}
+                                        </p>
+                                        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                                            <span className="text-xs font-bold text-amber-400 block"><i className="fa-solid fa-lightbulb mr-1"></i> Implikasi Bagi Senat HIMATEKK:</span>
+                                            <p className="text-slate-400 text-xs">
+                                                Apabila Senat tetap memosisikan diri secara eksklusif dan kaku, minat mahasiswa akan terus menurun. Oleh karena itu, Senat tidak lagi dapat dipandang hanya sebagai 'pemeriksa dokumen', melainkan mitra strategis pengembang iklim kemahasiswaan.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="lg:col-span-5 glass-card p-6 rounded-2xl border-l-4 border-l-amber-500 space-y-4">
+                                        <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                                            <i className="fa-solid fa-shield-halved"></i>
+                                            <span>{ANALISIS_DINAMIKA_2026.jawabanSenat.judul}</span>
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {ANALISIS_DINAMIKA_2026.jawabanSenat.strategi.map((s, idx) => (
+                                                <div key={idx} className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                                                    <h4 className="font-bold text-white text-xs text-blue-400">{s.nama}</h4>
+                                                    <p className="text-[11px] text-slate-300 leading-relaxed">{s.detail}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'sejarah' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800 relative overflow-hidden">
+                                    <div className="max-w-3xl space-y-3">
+                                        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-3 py-1 rounded-full font-bold">
+                                            <i className="fa-solid fa-clock-rotate-left"></i>
+                                            <span>Rujukan: Legislative Guidebook 1.0</span>
+                                        </div>
+                                        <h2 className="text-2xl lg:text-3xl font-extrabold text-white">
+                                            Sejarah Lembaga Legislatif & Perkembangan Senat di ITS
+                                        </h2>
+                                        <p className="text-slate-300 text-xs lg:text-sm leading-relaxed">
+                                            Lembaga legislatif di ITS telah mengalami transformasi nama, struktur, dan fungsi seiring dinamika perkembangan zaman dan pembaharuan Musyawarah Besar (MUBES) Mahasiswa ITS.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="relative border-l-2 border-blue-600/30 pl-6 lg:pl-8 ml-4 space-y-8">
+                                    {SEJARAH_TIMELINE.map((item, idx) => (
+                                        <div key={idx} className="relative group">
+                                            <div className="absolute -left-[31px] lg:-left-[39px] top-1.5 w-7 h-7 rounded-full bg-slate-900 border-2 border-blue-500 flex items-center justify-center text-xs text-amber-400 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
+                                                <i className={`fa-solid ${item.icon}`}></i>
+                                            </div>
+
+                                            <div className="glass-card p-6 rounded-2xl border border-slate-800 group-hover:border-blue-500/40 transition-all space-y-3">
+                                                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                                                    <div>
+                                                        <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md mr-2 border border-amber-500/20">
+                                                            {item.tahun}
+                                                        </span>
+                                                        <h4 className="inline-block font-extrabold text-white text-base lg:text-lg">
+                                                            {item.era}
+                                                        </h4>
+                                                    </div>
+                                                    <span className="text-[11px] font-semibold text-blue-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
+                                                        {item.mubes}
+                                                    </span>
+                                                </div>
+
+                                                <p className="text-xs text-slate-200 font-medium leading-relaxed">
+                                                    {item.deskripsi}
+                                                </p>
+
+                                                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 space-y-1">
+                                                    <span className="text-amber-400 font-bold block text-[11px]">
+                                                        <i className="fa-solid fa-quote-left mr-1"></i> Detail Sejarah:
+                                                    </span>
+                                                    <p className="text-slate-400 text-[11px] leading-relaxed">{item.detail}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'peraturan' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800">
+                                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                                        <div className="space-y-2">
+                                            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                                                <i className="fa-solid fa-scale-balanced mr-1"></i> Produk Hukum Resmi
+                                            </span>
+                                            <h2 className="text-2xl lg:text-3xl font-extrabold text-white">
+                                                Peraturan & Payung Hukum Senat HIMATEKK ITS
+                                            </h2>
+                                            <p className="text-xs lg:text-sm text-slate-300 max-w-2xl">
+                                                Senat HIMATEKK ITS memegang fungsi pembentukan dan pengawasan aturan dasar yang menaungi seluruh aktivitas mahasiswa Teknik Kimia ITS.
+                                            </p>
+                                        </div>
+                                        <div className="flex flex-wrap lg:flex-nowrap gap-2 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 shrink-0">
+                                            <button 
+                                                onClick={() => setSubTabPeraturan('pupp')}
+                                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${subTabPeraturan === 'pupp' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'}`}>
+                                                PUPP P3OK
+                                            </button>
+                                            <button 
+                                                onClick={() => setSubTabPeraturan('pemilu')}
+                                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${subTabPeraturan === 'pemilu' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}>
+                                                UU Pemilu 2021
+                                            </button>
+                                            <button 
+                                                onClick={() => setSubTabPeraturan('ppsdm')}
+                                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${subTabPeraturan === 'ppsdm' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}>
+                                                PPSDM HIMATEKK
+                                            </button>
+                                            <button 
+                                                onClick={() => setSubTabPeraturan('gbhk')}
+                                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${subTabPeraturan === 'gbhk' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}>
+                                                GBHK & RGBHK
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {subTabPeraturan === 'pupp' && (
+                                    <div className="space-y-6 animate-fadeIn">
+                                        <div className="grid lg:grid-cols-12 gap-6">
+                                            <div className="lg:col-span-6 glass-card p-6 rounded-2xl space-y-4">
+                                                <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                    <i className="fa-solid fa-scroll text-amber-400"></i>
+                                                    <span>Landasan & Hierarki Perundangan HMD</span>
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    <span className="text-xs font-bold text-slate-400 uppercase">3 Landasan Utama:</span>
+                                                    <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                                        {PERATURAN_SENAT.pupp.landasan.map((l, i) => (
+                                                            <div key={i} className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+                                                                <span className="text-amber-400 font-bold block text-[10px]">{l.jenis}</span>
+                                                                <p className="text-white font-semibold text-[11px] mt-1">{l.isi}</p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-2 pt-2">
+                                                    <span className="text-xs font-bold text-slate-400 uppercase">Tata Urutan Hukum HIMATEKK ITS:</span>
+                                                    <div className="space-y-2">
+                                                        {PERATURAN_SENAT.pupp.hirarkiHmd.map((h, i) => (
+                                                            <div key={i} className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-200">
+                                                                {h}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="lg:col-span-6 glass-card p-6 rounded-2xl space-y-4">
+                                                <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                    <i className="fa-solid fa-sitemap text-blue-400"></i>
+                                                    <span>Badan Kelengkapan Organisasi HIMATEKK</span>
+                                                </h3>
+                                                <div className="grid sm:grid-cols-2 gap-3">
+                                                    {PERATURAN_SENAT.pupp.kelengkapanOrg.map((k, i) => (
+                                                        <div key={i} className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                                                            <span className="text-[10px] font-bold text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded">
+                                                                {k.tipe}
+                                                            </span>
+                                                            <h4 className="font-bold text-white text-xs">{k.nama}</h4>
+                                                            <p className="text-[11px] text-slate-400">{k.ket}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1 mt-4">
+                                                    <span className="font-bold text-amber-300 block"><i className="fa-solid fa-shield-halved mr-1"></i> Ketentuan Senat HIMATEKK (Pasal 9 & 10 PUPP):</span>
+                                                    <p className="text-slate-300 text-[11px]">
+                                                        Anggota Senat minimal 5 orang perwakilan angkatan, dipilih internal angkatan, disahkan di MTT, dan **dilarang merangkap jabatan** di Direksi HIMATEKK ITS.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="glass-card p-6 rounded-2xl space-y-4">
+                                            <h3 className="text-lg font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                <i className="fa-solid fa-comments text-emerald-400"></i>
+                                                <span>Jenis Forum Permusyawaratan & Mekanisme SP/Memorandum</span>
+                                            </h3>
+                                            <div className="grid lg:grid-cols-3 gap-4">
+                                                {PERATURAN_SENAT.pupp.jenisForum.map((f, i) => (
+                                                    <div key={i} className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                                                        <h4 className="font-bold text-white text-sm text-amber-400">{f.nama}</h4>
+                                                        <p className="text-xs text-slate-300">{f.fungsi}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 space-y-1">
+                                                <span className="font-bold text-rose-400 block"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Sanksi Kontrol (Memorandum):</span>
+                                                <p className="text-slate-400">{PERATURAN_SENAT.pupp.memorandum}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {subTabPeraturan === 'pemilu' && (
+                                    <div className="space-y-6 animate-fadeIn">
+                                        <div className="glass-card p-6 rounded-2xl border border-blue-500/30 space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">UNDANG-UNDANG PEMILU HMD</span>
+                                                <span className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">Disahkan: 28 Sept 2021</span>
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white">{PERATURAN_SENAT.uuPemilu.title}</h3>
+                                            <p className="text-xs text-slate-300">{PERATURAN_SENAT.uuPemilu.subtitle}</p>
+                                            <div className="p-3 rounded-xl bg-blue-950/60 border border-blue-800 text-xs text-blue-300">
+                                                <i className="fa-solid fa-gavel mr-2 text-amber-400"></i>
+                                                <strong>Peran Senat:</strong> {PERATURAN_SENAT.uuPemilu.peranSenat}
+                                            </div>
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-3 gap-4">
+                                            {PERATURAN_SENAT.uuPemilu.perangkatPemilu.map((p, i) => (
+                                                <div key={i} className="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+                                                    <span className="text-[10px] font-bold text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded">
+                                                        {p.jumlah}
+                                                    </span>
+                                                    <h4 className="font-bold text-white text-sm">{p.organ}</h4>
+                                                    <p className="text-xs text-slate-300 leading-relaxed">{p.tugas}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-12 gap-6">
+                                            <div className="lg:col-span-7 glass-card p-6 rounded-2xl space-y-3">
+                                                <h4 className="font-bold text-white text-sm flex items-center gap-2 border-b border-slate-800 pb-2">
+                                                    <i className="fa-solid fa-user-check text-emerald-400"></i>
+                                                    <span>Persyaratan Calon Ketua HIMATEKK ITS (Pasal 6)</span>
+                                                </h4>
+                                                <ul className="space-y-2 text-xs text-slate-300">
+                                                    {PERATURAN_SENAT.uuPemilu.syaratPeserta.map((s, i) => (
+                                                        <li key={i} className="flex items-center gap-2 bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                                                            <i className="fa-solid fa-check text-amber-400"></i>
+                                                            <span>{s}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            <div className="lg:col-span-5 glass-card p-6 rounded-2xl flex flex-col justify-between border-l-4 border-l-amber-500">
+                                                <div>
+                                                    <h4 className="font-bold text-amber-400 text-sm mb-2"><i className="fa-solid fa-box-archive mr-2"></i>Syarat Sah Pemungutan Suara</h4>
+                                                    <p className="text-xs text-slate-300 leading-relaxed">
+                                                        {PERATURAN_SENAT.uuPemilu.kuorumSah}
+                                                    </p>
+                                                </div>
+                                                <div className="p-3 bg-slate-900 rounded-xl text-[11px] text-slate-400 mt-4">
+                                                    <strong>Azas Pemilu:</strong> {PERATURAN_SENAT.uuPemilu.azas}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {subTabPeraturan === 'ppsdm' && (
+                                    <div className="space-y-6 animate-fadeIn">
+                                        <div className="glass-card p-6 rounded-2xl border border-emerald-500/30 space-y-2">
+                                            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">KADERISASI & POLA PENGEMBANGAN</span>
+                                            <h3 className="text-xl font-bold text-white">{PERATURAN_SENAT.ppsdm.title}</h3>
+                                            <p className="text-xs text-slate-300">{PERATURAN_SENAT.ppsdm.subtitle}</p>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                                                <i className="fa-solid fa-cubes text-amber-400"></i>
+                                                <span>4 Bidang Utama PPSDM HIMATEKK ITS</span>
+                                            </h4>
+                                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                                {PERATURAN_SENAT.ppsdm.empatBidang.map((b, i) => (
+                                                    <div key={i} className="glass-card p-5 rounded-2xl border border-slate-800 space-y-2">
+                                                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                                                            0{i+1}
+                                                        </div>
+                                                        <h5 className="font-bold text-white text-sm">{b.nama}</h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">{b.fokus}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="glass-card p-6 rounded-2xl space-y-4">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                <i className="fa-solid fa-bars-staggered text-blue-400"></i>
+                                                <span>3 Tahapan Pola Pengembangan Berjenjang</span>
+                                            </h4>
+                                            <div className="grid lg:grid-cols-3 gap-4">
+                                                {PERATURAN_SENAT.ppsdm.tigaTahapan.map((t, i) => (
+                                                    <div key={i} className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                                                        <h5 className="font-bold text-amber-400 text-xs uppercase">{t.tahap}</h5>
+                                                        <p className="text-xs text-slate-300">{t.desc}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {subTabPeraturan === 'gbhk' && (
+                                    <div className="space-y-6 animate-fadeIn">
+                                        <div className="glass-card p-6 rounded-2xl border border-purple-500/30 space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs font-bold text-purple-400 uppercase tracking-widest">HALUAN KEBIJAKAN TAHUNAN HMD</span>
+                                                <span className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700"><i className="fa-solid fa-rotate-right text-amber-400 mr-1.5"></i>Siklus Tiap Kepengurusan</span>
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white">{PERATURAN_SENAT.gbhk.title}</h3>
+                                            <p className="text-xs text-slate-300">{PERATURAN_SENAT.gbhk.subtitle}</p>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div className="glass-card p-6 rounded-2xl border-l-4 border-l-purple-500 space-y-2">
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-file-contract text-purple-400 text-lg"></i>
+                                                    <h4 className="font-bold text-white text-base">RGBHK (Rancangan GBHK)</h4>
+                                                </div>
+                                                <p className="text-xs text-slate-300 leading-relaxed">
+                                                    {PERATURAN_SENAT.gbhk.definisiRgbhk}
+                                                </p>
+                                                <div className="pt-2 text-[11px] text-amber-400 font-medium">
+                                                    <i className="fa-solid fa-pen-ruler mr-1"></i> Dirumuskan oleh Senat via Jaring Aspirasi (Road to RGBHK)
+                                                </div>
+                                            </div>
+
+                                            <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500 space-y-2">
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-scale-balanced text-emerald-400 text-lg"></i>
+                                                    <h4 className="font-bold text-white text-base">GBHK (Garis Besar Haluan Kerja)</h4>
+                                                </div>
+                                                <p className="text-xs text-slate-300 leading-relaxed">
+                                                    {PERATURAN_SENAT.gbhk.definisiGbhk}
+                                                </p>
+                                                <div className="pt-2 text-[11px] text-emerald-400 font-medium">
+                                                    <i className="fa-solid fa-gavel mr-1"></i> Disahkan di Sidang MTT & Wajib Dilaksanakan Direksi
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="glass-card p-6 rounded-2xl space-y-4">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                <i className="fa-solid fa-diagram-project text-amber-400"></i>
+                                                <span>Alur Siklus Perumusan RGBHK menjadi GBHK (Tiap Kepengurusan)</span>
+                                            </h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                                                {PERATURAN_SENAT.gbhk.alurSiklus.map((s, idx) => (
+                                                    <div key={idx} className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-2 flex flex-col justify-between">
+                                                        <div className="space-y-1">
+                                                            <span className="text-[10px] font-bold text-amber-400 uppercase block">{s.tahap}</span>
+                                                            <h5 className="font-bold text-white text-xs">{s.organ}</h5>
+                                                            <p className="text-[10px] text-slate-400 leading-snug">{s.ket}</p>
+                                                        </div>
+                                                        <div className="text-[10px] text-blue-400 pt-2 border-t border-slate-800/60 font-semibold">
+                                                            Tahap 0{idx + 1}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="glass-card p-6 rounded-2xl space-y-4">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                                                <i className="fa-solid fa-shield-halved text-blue-400"></i>
+                                                <span>Fungsi GBHK Sebagai Parameter Pengawasan Senat</span>
+                                            </h4>
+                                            <div className="grid md:grid-cols-3 gap-4">
+                                                {PERATURAN_SENAT.gbhk.fungsiKontrol.map((f, i) => (
+                                                    <div key={i} className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5">
+                                                        <h5 className="font-bold text-amber-400 text-xs flex items-center gap-2">
+                                                            <i className="fa-solid fa-circle-check text-xs"></i>
+                                                            {f.nama}
+                                                        </h5>
+                                                        <p className="text-xs text-slate-300 leading-relaxed">{f.desc}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'proker' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                                            <i className="fa-solid fa-list-check mr-1.5"></i> Eksekusi Program Kerja
+                                        </span>
+                                        <h2 className="text-2xl lg:text-3xl font-extrabold text-white mt-2">Program Kerja Senat HIMATEKK ITS</h2>
+                                        <p className="text-xs text-slate-300 mt-1">Daftar lengkap agenda dan program kerja komisi Kabinet Resonansi 2025/2026.</p>
+                                    </div>
+
+                                    {/* Category Filter Buttons */}
+                                    <div className="flex flex-wrap gap-2 shrink-0">
+                                        {['All', 'Internal', 'Ascom', 'Controlling', 'Legislatif'].map(kat => (
+                                            <button
+                                                key={kat}
+                                                onClick={() => setFilterKategori(kat)}
+                                                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                                                    filterKategori === kat 
+                                                    ? 'bg-amber-500 text-slate-950 font-bold shadow-md' 
+                                                    : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white'
+                                                }`}>
+                                                {kat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredProker.map(p => (
+                                        <div key={p.id} className="glass-card p-6 rounded-2xl border border-slate-800 hover:border-amber-500/40 transition-all space-y-4 flex flex-col justify-between">
+                                            <div className="space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg">
+                                                        <i className={`fa-solid ${p.icon}`}></i>
+                                                    </div>
+                                                    <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+                                                        {p.komisi}
+                                                    </span>
+                                                </div>
+                                                <h3 className="font-extrabold text-white text-base">{p.nama}</h3>
+                                                <p className="text-xs text-slate-300 leading-relaxed">{p.deskripsi}</p>
+                                            </div>
+
+                                            <div className="space-y-2 pt-3 border-t border-slate-800/80 text-[11px]">
+                                                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 space-y-1">
+                                                    <span className="font-bold text-amber-400 block"><i className="fa-solid fa-bullseye mr-1"></i> Tujuan:</span>
+                                                    <p className="text-slate-300">{p.tujuan}</p>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-slate-400">
+                                                    <i className="fa-solid fa-users text-blue-400"></i>
+                                                    <span>Sasaran: <strong className="text-slate-200">{p.sasaran}</strong></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'guidebook' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800">
+                                    <div className="max-w-3xl space-y-3">
+                                        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-3 py-1 rounded-full font-bold">
+                                            <i className="fa-solid fa-book-bookmark"></i>
+                                            <span>Legislative Guidebook 1.0</span>
+                                        </div>
+                                        <h2 className="text-2xl lg:text-3xl font-extrabold text-white">Edukasi Hukum & Persidangan di KM ITS</h2>
+                                        <p className="text-xs lg:text-sm text-slate-300 leading-relaxed">
+                                            Panduan praktis aturan forum, mekanime ketuk palu sidang, jenis-jenis putusan, dan tata urutan perundangan dari Legislative Guidebook.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid lg:grid-cols-2 gap-6">
+                                    {/* Jenis Persidangan */}
+                                    <div className="glass-card p-6 rounded-2xl space-y-4">
+                                        <h3 className="text-base font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                                            <i className="fa-solid fa-gavel"></i> Jenis-Jenis Forum Musyawarah Sidang
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {GUIDEBOOK_DATA.jenisPersidangan.map((j, i) => (
+                                                <div key={i} className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                                                    <div className="flex items-center justify-between">
+                                                        <h4 className="font-bold text-white text-xs">{j.nama}</h4>
+                                                        <span className="text-[10px] text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">{j.cakupan}</span>
+                                                    </div>
+                                                    <p className="text-[11px] text-slate-300 leading-relaxed">{j.deskripsi}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Ketuk Palu & Putusan */}
+                                    <div className="space-y-6">
+                                        <div className="glass-card p-6 rounded-2xl space-y-3">
+                                            <h3 className="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+                                                <i className="fa-solid fa-hand-fist"></i> Aturan Ketukan Palu Sidang
+                                            </h3>
+                                            <div className="space-y-2">
+                                                {GUIDEBOOK_DATA.aturanKetukPalu.map((k, i) => (
+                                                    <div key={i} className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-0.5">
+                                                        <span className="font-bold text-amber-400 text-xs">{k.ketuk}</span>
+                                                        <p className="text-[11px] text-slate-300">{k.arti}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="glass-card p-6 rounded-2xl space-y-3">
+                                            <h3 className="text-base font-bold text-emerald-400 flex items-center gap-2 border-b border-slate-800 pb-2">
+                                                <i className="fa-solid fa-scroll"></i> 3 Jenis Putusan Dalam Sidang
+                                            </h3>
+                                            <div className="grid grid-cols-3 gap-2 text-center">
+                                                {GUIDEBOOK_DATA.jenisPutusan.map((p, i) => (
+                                                    <div key={i} className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                                                        <span className="text-[10px] font-bold text-amber-400 block uppercase">{p.tipe}</span>
+                                                        <span className="text-[9px] text-blue-400 block">{p.sifat}</span>
+                                                        <p className="text-[10px] text-slate-300 mt-1">{p.ket}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'ketua' && (
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="glass-card p-8 rounded-3xl border border-slate-800 max-w-4xl mx-auto">
+                                    <div className="grid md:grid-cols-12 gap-8 items-center">
+                                        <div className="md:col-span-5 text-center space-y-3">
+                                            <div className="w-48 h-48 mx-auto rounded-3xl bg-slate-900 border-2 border-amber-500/50 p-2 shadow-2xl relative">
+                                                <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-blue-900 to-indigo-900 flex flex-col items-center justify-center text-5xl text-amber-400">
+                                                    <i className="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-extrabold text-white">{KABINET_INFO.ketua}</h3>
+                                                <span className="inline-block bg-amber-500/20 text-amber-400 font-bold text-xs px-3 py-1 rounded-full border border-amber-500/30 mt-1">
+                                                    {KABINET_INFO.angkatan}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="md:col-span-7 space-y-4">
+                                            <div>
+                                                <span className="text-xs text-blue-400 font-bold uppercase tracking-wider block">Formatur / Ketua Senat</span>
+                                                <h2 className="text-2xl font-bold text-white mt-1">Senat HIMATEKK ITS 2025/2026</h2>
+                                            </div>
+
+                                            <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                                Memimpin Kabinet Resonansi dengan semangat menjadikan Senat sebagai ruang gema aspirasi yang responsif, kolaboratif, dan berdampak bagi seluruh warga Teknik Kimia FTIRS ITS.
+                                            </p>
+
+                                            <div className="space-y-2">
+                                                <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                                                    <i className="fa-solid fa-briefcase mr-2"></i> Rekam Jejak Pengalaman & Kepemimpinan:
+                                                </h4>
+                                                <div className="grid sm:grid-cols-2 gap-2 text-xs">
+                                                    {KABINET_INFO.pengalamanKetua.map((exp, idx) => (
+                                                        <div key={idx} className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2 text-slate-300">
+                                                            <i className="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
+                                                            <span>{exp}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {}
+                        {activeTab === 'quiz' && (
+                            <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto">
+                                <div className="glass-card p-6 lg:p-8 rounded-3xl border border-slate-800 flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                                            <i className="fa-solid fa-circle-question mr-1.5"></i> Evaluasi Pemahaman
+                                        </span>
+                                        <h2 className="text-2xl font-extrabold text-white">Kuis Pemahaman Senat HIMATEKK ITS</h2>
+                                        <p className="text-xs text-slate-300">Uji pengetahuan Anda mengenai fungsi Senat, peraturan, dan sejarah legislatif.</p>
+                                    </div>
+                                    {quizSubmitted && (
+                                        <div className="text-right bg-slate-900 px-5 py-3 rounded-2xl border border-amber-500/30">
+                                            <span className="text-xs text-slate-400 block">Skor Akhir:</span>
+                                            <span className="text-2xl font-extrabold text-amber-400">{quizScore} / 100</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-6">
+                                    {QUIZ_QUESTIONS.map((q, qIdx) => (
+                                        <div key={q.id} className="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                                            <h3 className="font-bold text-white text-sm flex items-start gap-3">
+                                                <span className="bg-blue-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs">
+                                                    {qIdx + 1}
+                                                </span>
+                                                <span>{q.question}</span>
+                                            </h3>
+
+                                            <div className="space-y-2">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isSelected = quizAnswers[q.id] === optIdx;
+                                                    const isCorrect = q.answer === optIdx;
+                                                    
+                                                    let btnStyle = "bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700";
+                                                    if (isSelected) {
+                                                        btnStyle = "bg-blue-900/50 border-blue-500 text-white font-semibold";
+                                                    }
+                                                    if (quizSubmitted) {
+                                                        if (isCorrect) {
+                                                            btnStyle = "bg-emerald-950/80 border-emerald-500 text-emerald-200 font-semibold";
+                                                        } else if (isSelected && !isCorrect) {
+                                                            btnStyle = "bg-rose-950/80 border-rose-500 text-rose-200";
+                                                        }
+                                                    }
+
+                                                    return (
+                                                        <button
+                                                            key={optIdx}
+                                                            onClick={() => handleQuizSelect(q.id, optIdx)}
+                                                            className={`w-full text-left p-3.5 rounded-xl border text-xs transition-all flex items-center justify-between ${btnStyle}`}>
+                                                            <span>{opt}</span>
+                                                            {quizSubmitted && isCorrect && <i className="fa-solid fa-circle-check text-emerald-400"></i>}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {quizSubmitted && (
+                                                <div className="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-[11px] text-slate-300">
+                                                    <span className="font-bold text-amber-400 block mb-0.5"><i className="fa-solid fa-lightbulb mr-1"></i> Penjelasan:</span>
+                                                    {q.explanation}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+
+                                    <div className="flex justify-end gap-4 pt-4">
+                                        {!quizSubmitted ? (
+                                            <button
+                                                onClick={handleQuizSubmit}
+                                                disabled={Object.keys(quizAnswers).length < QUIZ_QUESTIONS.length}
+                                                className={`px-6 py-3 rounded-xl font-bold text-xs transition-all ${
+                                                    Object.keys(quizAnswers).length < QUIZ_QUESTIONS.length
+                                                    ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                                                    : 'bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-lg shadow-amber-500/20'
+                                                }`}>
+                                                Kirim & Lihat Hasil Skor
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={handleQuizReset}
+                                                className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs px-6 py-3 rounded-xl border border-slate-700 transition-all">
+                                                Coba Kuis Lagi
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-900 border-t border-slate-800 py-6 px-4 text-center text-xs text-slate-500">
+                        <p>© 2025/2026 Senat HIMATEKK ITS — Kabinet Resonansi. Media Pembelajaran Peraturan & Program Kerja.</p>
+                    </footer>
+
+                    {}
+                    {presenterMode && (
+                        <div className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between p-6 lg:p-12 animate-fadeIn">
+                            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full font-bold border border-amber-500/30">
+                                        {slides[currentSlide].badge}
+                                    </span>
+                                    <span className="text-xs text-slate-400">Slide {currentSlide + 1} dari {slides.length}</span>
+                                </div>
+                                <button 
+                                    onClick={() => setPresenterMode(false)}
+                                    className="text-slate-400 hover:text-white bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2">
+                                    <i className="fa-solid fa-xmark"></i> Keluar Presenter Mode
+                                </button>
+                            </div>
+
+                            <div className="max-w-4xl mx-auto w-full my-auto glass-card p-8 lg:p-12 rounded-3xl border border-blue-500/30 shadow-2xl">
+                                <div className="mb-6 border-b border-slate-800 pb-4">
+                                    <h2 className="text-3xl font-extrabold text-white mb-1">{slides[currentSlide].title}</h2>
+                                    <p className="text-sm text-amber-400 font-medium">{slides[currentSlide].subtitle}</p>
+                                </div>
+
+                                {slides[currentSlide].content}
+                            </div>
+
+                            <div className="flex items-center justify-between border-t border-slate-800 pt-4 max-w-4xl mx-auto w-full">
+                                <button
+                                    onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
+                                    disabled={currentSlide === 0}
+                                    className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+                                        currentSlide === 0 
+                                        ? 'bg-slate-900 text-slate-600 cursor-not-allowed' 
+                                        : 'bg-slate-800 hover:bg-slate-700 text-white'
+                                    }`}>
+                                    <i className="fa-solid fa-chevron-left"></i> Previous
+                                </button>
+
+                                <div className="flex gap-2">
+                                    {slides.map((_, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setCurrentSlide(idx)}
+                                            className={`w-3 h-3 rounded-full transition-all ${
+                                                currentSlide === idx ? 'bg-amber-400 w-8' : 'bg-slate-800'
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+
+                                <button
+                                    onClick={() => setCurrentSlide(Math.min(slides.length - 1, currentSlide + 1))}
+                                    disabled={currentSlide === slides.length - 1}
+                                    className={`px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+                                        currentSlide === slides.length - 1 
+                                        ? 'bg-slate-900 text-slate-600 cursor-not-allowed' 
+                                        : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30'
+                                    }`}>
+                                    Next <i className="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
